@@ -157,26 +157,41 @@ wmata <- read_csv("wmata_ridership.csv")
 ```
 
 ```{r}
+glimpse(wmata)
+```
+Variables:
+Date - 5,469 days starting from January 1st, 2004.
+Total - Total recorded ridership for the accompanying day on WMATA transit options. 
 
+```{r}
+wmata_separated <- wmata %>%
+  mutate(year = year(Date),
+         month = month(Date),
+         day = day(Date))
 
+wmata_separated
 ```
 
 ```{r}
+daily_rides = wmata_separated %>% 
+                group_by(month, day) %>% 
+                mutate(total_rides = sum(Total))
 
+wmata_proportions = daily_rides %>% 
+                      group_by(month) %>% 
+                      mutate(prop_rides = total_rides / sum(total_rides))
+                      
+wmata_proportions
 ```
 
 ```{r}
+wmata_proportions = wmata_proportions %>%
+  filter(year >=2005)
+
+ggplot(wmata_proportions, aes(x = as.factor(day), y = prop_rides)) +
+  geom_boxplot()
 
 ```
-
-```{r}
-
-```
-
-```{r}
-
-```
-
 
 
 
@@ -185,18 +200,14 @@ Problem 4: repositoryexam_1
 knitr::include_graphics("repo_proof.png")
 # This is screenshot of the created repository showing evidence of the three files uploaded
 ```
-
-```{r}
-# Now go to the bash terminal and clone the repository back to your Descktop
-```
+Then I cloned it back to my desktop, I also committed it and pushed it
 
 
 
 Problem 5: PAT token
-```{r}
-## this is my PAT token
+this is my PAT token
 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
-```
+
 
 ```{r}
 
@@ -233,6 +244,7 @@ print(trips_per_airport)
 mean_dep_delay <- flights_dt[month %in% c(1, 2), .(mean_dep_delay = mean(dep_delay, na.rm = TRUE)), by = .(origin)]
 print(mean_dep_delay)
 ```
+
 
 
 Problem 7: OpenIntro Marijuana
